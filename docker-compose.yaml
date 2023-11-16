@@ -1,0 +1,23 @@
+name: calculations-system
+services:
+  calculations-db:
+    image: postgres:latest
+    healthcheck:
+      test: exit 0
+    environment:
+      POSTGRES_USER: calculations-user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: calculations-db
+
+  calculations-db-access:
+    depends_on:
+      calculations-db:
+        condition: service_healthy
+    build:
+      context: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://calculations-db:5432/calculations-db
+      SPRING_DATASOURCE_USERNAME: calculations-user
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - 8080:8080

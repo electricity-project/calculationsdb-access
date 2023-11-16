@@ -4,10 +4,10 @@
 # syntax=docker/dockerfile:1
 FROM eclipse-temurin:21-jdk-jammy AS build
 ENV HOME=/usr/app
-RUN mkdir -p $HOME
+RUN mkdir -p "$HOME"
 WORKDIR $HOME
 ADD . $HOME
-RUN --mount=type=cache,target=/root/.m2 ./mvnw -f $HOME/pom.xml clean package -DskipTests
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -f "$HOME"/pom.xml clean package -DskipTests spring-boot:repackage
 
 #
 # Package stage
