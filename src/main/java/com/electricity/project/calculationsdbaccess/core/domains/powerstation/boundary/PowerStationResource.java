@@ -1,6 +1,6 @@
 package com.electricity.project.calculationsdbaccess.core.domains.powerstation.boundary;
 
-import com.electricity.project.calculationsdbaccess.api.error.ImmutableErrorDTO;
+import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationDTO;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
@@ -46,10 +46,9 @@ public class PowerStationResource {
         );
     }
 
-
     @ExceptionHandler(IncorrectPowerStationType.class)
-    private ResponseEntity<ImmutableErrorDTO> handlePowerStationNotExistsException(IncorrectPowerStationType exception) {
+    private ResponseEntity<ErrorDTO> handleIncorrectPowerStationType(IncorrectPowerStationType exception) {
         log.error("Incorrect power station type", exception);
-        return ResponseEntity.badRequest().body(ImmutableErrorDTO.builder().error(exception.getMessage()).build());
+        return ResponseEntity.internalServerError().body(ErrorDTO.builder().error(exception.getMessage()).build());
     }
 }
