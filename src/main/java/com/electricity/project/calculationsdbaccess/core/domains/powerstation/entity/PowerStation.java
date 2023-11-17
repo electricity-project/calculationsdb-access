@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity;
 
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
+import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @SuperBuilder
 @AllArgsConstructor
@@ -23,7 +26,7 @@ public abstract class PowerStation {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(length = 39, unique = true, nullable = false)
+    @Column(name = "ipv6Address", length = 39, unique = true, nullable = false)
     private String ipv6Address;
 
     @Column(nullable = false)
@@ -35,5 +38,9 @@ public abstract class PowerStation {
 
     @Column(nullable = false)
     private double maxPower;
+
+    @OneToMany
+    @JoinColumn(name= "power_staion_ipv6", referencedColumnName = "ipv6Address")
+    private Set<PowerProduction> powerProductions = new LinkedHashSet<>();
 
 }

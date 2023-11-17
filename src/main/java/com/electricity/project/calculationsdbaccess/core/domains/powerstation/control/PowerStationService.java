@@ -27,7 +27,11 @@ public class PowerStationService {
         return powerStationRepository.findById(id);
     }
 
-    public Page<PowerStation> getPowerStations(Pageable pageable){
+    public Optional<PowerStation> findPowerStationByIpv6(String ipv6) {
+        return powerStationRepository.findPowerStationByIpv6Address(ipv6);
+    }
+
+    public Page<PowerStation> getPowerStations(Pageable pageable) {
         return powerStationRepository.findAll(pageable);
     }
 }
