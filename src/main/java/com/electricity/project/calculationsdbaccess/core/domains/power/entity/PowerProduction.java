@@ -26,7 +26,7 @@ public class PowerProduction {
     @JdbcTypeCode(SqlTypes.REAL)
     private Long producedPower;
 
-    @Column(name = "power_staion_ipv6", nullable = false)
+    @Column(name = "power_station_ipv6", nullable = false)
     private String ipv6;
 
     @Column(nullable = false)

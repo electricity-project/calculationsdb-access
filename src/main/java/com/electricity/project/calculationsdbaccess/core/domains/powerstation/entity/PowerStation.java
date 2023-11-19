@@ -39,8 +39,31 @@ public abstract class PowerStation {
     @Column(nullable = false)
     private double maxPower;
 
-    @OneToMany
-    @JoinColumn(name= "power_staion_ipv6", referencedColumnName = "ipv6Address")
+    @Column(nullable = false)
+    private boolean isConnected;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "power_station_ipv6", referencedColumnName = "ipv6Address", nullable = false, insertable = false, updatable = false)
     private Set<PowerProduction> powerProductions = new LinkedHashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PowerStation that)) return false;
+
+        if (Double.compare(maxPower, that.maxPower) != 0) return false;
+        if (!ipv6Address.equals(that.ipv6Address)) return false;
+        return creationTime.equals(that.creationTime);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = ipv6Address.hashCode();
+        result = 31 * result + creationTime.hashCode();
+        temp = Double.doubleToLongBits(maxPower);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

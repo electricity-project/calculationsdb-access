@@ -33,8 +33,7 @@ public class PowerProductionResource {
                 .stream()
                 .map(PowerProductionMapper::mapToDTO)
                 .toList();
-        log.debug(String.join(",", savedDtoList.stream().map(Objects::toString).toArray(String[]::new)));
-        log.info("Number of saved elements: {}", savedDtoList.size());
+        log.debug("Received body: {}", String.join(",", savedDtoList.stream().map(Objects::toString).toArray(String[]::new)));
         return ResponseEntity.ok(savedDtoList);
     }
 

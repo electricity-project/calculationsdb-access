@@ -5,6 +5,7 @@ import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStatio
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.IncorrectPowerStationType;
+import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationIpv6Address;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,13 @@ public class PowerStationResource {
     private final PowerStationService powerStationService;
 
     @PostMapping
-    public ResponseEntity<PowerStationDTO> addNewPowerStation(@RequestBody PowerStationDTO powerStationDTO) {
+    public ResponseEntity<PowerStationDTO> connectPowerStation(@RequestBody PowerStationDTO powerStationDTO) {
         PowerStation savedPowerStation = powerStationService.savePowerStation(PowerStationMapper.mapToEntity(powerStationDTO));
         return ResponseEntity.ok(PowerStationMapper.mapToDTO(savedPowerStation));
     }
 
     @PostMapping("/list")
-    public ResponseEntity<List<PowerStationDTO>> addNewPowerStations(@RequestBody List<PowerStationDTO> powerStationDTOs) {
+    public ResponseEntity<List<PowerStationDTO>> connectPowerStations(@RequestBody List<PowerStationDTO> powerStationDTOs) {
         List<PowerStation> savedPowerStations = powerStationService.savePowerStations(
                 powerStationDTOs.stream().map(PowerStationMapper::mapToEntity).toList()
         );
@@ -46,9 +47,27 @@ public class PowerStationResource {
         );
     }
 
+    @GetMapping("/disconnect")
+    public ResponseEntity<Void> disconnectPowerStation(@RequestParam String ipv6Address) {
+        powerStationService.disconnectPowerStation(ipv6Address);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/disconnect/list")
+    public ResponseEntity<Void> disconnectPowerStations(@RequestParam List<String> ipv6Addresses) {
+        powerStationService.disconnectPowerStations(ipv6Addresses);
+        return ResponseEntity.ok().build();
+    }
+
     @ExceptionHandler(IncorrectPowerStationType.class)
     private ResponseEntity<ErrorDTO> handleIncorrectPowerStationType(IncorrectPowerStationType exception) {
         log.error("Incorrect power station type", exception);
         return ResponseEntity.internalServerError().body(ErrorDTO.builder().error(exception.getMessage()).build());
+    }
+
+    @ExceptionHandler(InvalidPowerStationIpv6Address.class)
+    private ResponseEntity<ErrorDTO> handleInvalidPowerStationIpv6Address(InvalidPowerStationIpv6Address exception) {
+        log.error("Invalid power station ipv6", exception);
+        return ResponseEntity.badRequest().body(ErrorDTO.builder().error(exception.getMessage()).build());
     }
 }

@@ -10,4 +10,8 @@ import java.util.Optional;
 public interface PowerStationRepository extends JpaRepository<PowerStation, Long> {
 
     Optional<PowerStation> findPowerStationByIpv6Address(String ipv6);
+
+
+    long deleteByIpv6Address(String ipv6Address);
+
 }
