@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.control;
 
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class PowerProductionService {
         return powerProductionRepository.save(powerProduction);
     }
 
+    @Transactional
     public List<PowerProduction> savePowerProductionList(List<PowerProduction> powerProductionList) {
         return powerProductionRepository.saveAll(powerProductionList);
     }
