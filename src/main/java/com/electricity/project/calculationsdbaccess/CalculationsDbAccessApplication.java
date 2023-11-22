@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CalculationsDbAccessApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CalculationsDbAccessApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CalculationsDbAccessApplication.class, args);
+    }
 
 }
