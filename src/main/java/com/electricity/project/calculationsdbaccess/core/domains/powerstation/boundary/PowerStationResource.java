@@ -53,8 +53,8 @@ public class PowerStationResource {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/disconnect/list")
-    public ResponseEntity<Void> disconnectPowerStations(@RequestParam List<String> ipv6Addresses) {
+    @PostMapping("/disconnect/list")
+    public ResponseEntity<Void> disconnectPowerStations(@RequestBody List<String> ipv6Addresses) {
         powerStationService.disconnectPowerStations(ipv6Addresses);
         return ResponseEntity.ok().build();
     }

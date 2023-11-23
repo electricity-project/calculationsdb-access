@@ -8,11 +8,9 @@ import com.electricity.project.calculationsdbaccess.core.domains.power.entity.Po
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +39,15 @@ public class PowerProductionResource {
     public ResponseEntity<PowerProductionDTO> addPowerProductionMessage(@RequestBody PowerProductionDTO powerProductionDTO) {
         PowerProduction powerProduction = PowerProductionMapper.mapToEntity(powerProductionDTO);
         return ResponseEntity.ok(PowerProductionMapper.mapToDTO(powerProductionService.savePowerProduction(powerProduction)));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PowerProductionDTO>> getPowerProductionForIpv6(@RequestParam String ipv6, Pageable pageable) {
+        return ResponseEntity.ok(powerProductionService.getPowerProductionByIpv6(ipv6, pageable)
+                .stream()
+                .map(PowerProductionMapper::mapToDTO)
+                .toList()
+        );
     }
 
 }
