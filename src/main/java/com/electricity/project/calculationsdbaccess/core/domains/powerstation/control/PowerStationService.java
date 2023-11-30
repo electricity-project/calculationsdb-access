@@ -45,6 +45,10 @@ public class PowerStationService {
         return powerStationToSave;
     }
 
+    public long countPowerStations(){
+        return powerStationRepository.countByIsConnected(true);
+    }
+
     public Optional<PowerStation> findPowerStationByIpv6(String ipv6) {
         return powerStationRepository.findPowerStationByIpv6Address(ipv6);
     }

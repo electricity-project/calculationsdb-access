@@ -47,6 +47,12 @@ public class PowerStationResource {
         );
     }
 
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getPowerStationsCount() {
+        return ResponseEntity.ok(powerStationService.countPowerStations());
+    }
+
     @GetMapping("/disconnect")
     public ResponseEntity<Void> disconnectPowerStation(@RequestParam String ipv6Address) {
         powerStationService.disconnectPowerStation(ipv6Address);
