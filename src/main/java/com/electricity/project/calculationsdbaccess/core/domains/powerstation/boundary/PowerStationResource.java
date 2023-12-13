@@ -9,6 +9,7 @@ import com.electricity.project.calculationsdbaccess.core.domains.powerstation.co
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +39,8 @@ public class PowerStationResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PowerStationDTO>> getPowerStations(Pageable pageable) {
-        return ResponseEntity.ok(
-                powerStationService.getPowerStations(pageable)
-                        .stream()
-                        .map(PowerStationMapper::mapToDTO)
-                        .toList()
-        );
+    public ResponseEntity<Page<PowerStationDTO>> getPowerStations(Pageable pageable) {
+        return ResponseEntity.ok(powerStationService.getPowerStations(pageable).map(PowerStationMapper::mapToDTO));
     }
 
 
