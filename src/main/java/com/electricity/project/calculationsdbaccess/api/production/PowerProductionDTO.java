@@ -22,13 +22,13 @@ public interface PowerProductionDTO {
     @JsonProperty(value = "id")
     Optional<Long> getId();
 
-    @JsonProperty(value = "ipv6", required = true)
+    @JsonProperty(value = "ipv6Address", required = true)
     String getIpv6Address();
 
     @JsonProperty(value = "state", required = true)
     PowerStationState getState();
 
-    @JsonProperty(value = "producedPower", required = true)
+    @JsonProperty(value = "power", required = true)
     Long getProducedPower();
 
     @JsonProperty(value = "timestamp", required = true)
