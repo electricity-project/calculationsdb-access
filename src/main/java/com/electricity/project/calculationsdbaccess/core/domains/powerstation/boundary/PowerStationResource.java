@@ -2,6 +2,7 @@ package com.electricity.project.calculationsdbaccess.core.domains.powerstation.b
 
 import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationDTO;
+import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.IncorrectPowerStationType;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/power-station")
@@ -45,8 +47,8 @@ public class PowerStationResource {
 
 
     @GetMapping("/count")
-    public ResponseEntity<Long> getPowerStationsCount() {
-        return ResponseEntity.ok(powerStationService.countPowerStations());
+    public ResponseEntity<Map<PowerStationState, Long>> getConnectedPowerStationsCount() {
+        return ResponseEntity.ok(powerStationService.countPowerStationsByStates());
     }
 
     @GetMapping("/disconnect")
