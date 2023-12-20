@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,9 +51,14 @@ public class PowerStationService {
     }
 
     public Map<PowerStationState, Integer> countPowerStationsByStates() {
-        return powerStationRepository.countPowerStationsByState()
+        Map<PowerStationState, Integer> powerStationsStates = powerStationRepository.countPowerStationsByState()
                 .stream()
                 .collect(Collectors.toMap(IPowerStationCount::getState, IPowerStationCount::getNumber));
+
+        Arrays.stream(PowerStationState.values())
+                .forEach(state -> powerStationsStates.putIfAbsent(state, 0));
+
+        return powerStationsStates;
     }
 
     public Optional<PowerStation> findPowerStationByIpv6(String ipv6) {

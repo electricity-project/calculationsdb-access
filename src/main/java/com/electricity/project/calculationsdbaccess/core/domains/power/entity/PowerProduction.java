@@ -5,6 +5,8 @@ import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStatio
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLInsert;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@SQLInsert(sql = "INSERT INTO power_production (power_station_ipv6, produced_power, state, timestamp, id) VALUES (?, ?, ? , ?, ?)",
+        check = ResultCheckStyle.NONE
+)
 public class PowerProduction {
 
     @Id
