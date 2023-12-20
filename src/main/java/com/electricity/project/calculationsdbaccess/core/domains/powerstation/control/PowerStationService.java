@@ -49,7 +49,7 @@ public class PowerStationService {
         return powerStationToSave;
     }
 
-    public Map<PowerStationState, Long> countPowerStationsByStates() {
+    public Map<PowerStationState, Integer> countPowerStationsByStates() {
         return powerStationRepository.countPowerStationsByState()
                 .stream()
                 .collect(Collectors.toMap(IPowerStationCount::getState, IPowerStationCount::getNumber));

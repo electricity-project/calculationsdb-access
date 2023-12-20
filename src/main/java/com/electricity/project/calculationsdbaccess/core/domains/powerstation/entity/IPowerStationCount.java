@@ -6,5 +6,5 @@ import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStatio
 public interface IPowerStationCount {
     PowerStationState getState();
 
-    Long getNumber();
+    Integer getNumber();
 }

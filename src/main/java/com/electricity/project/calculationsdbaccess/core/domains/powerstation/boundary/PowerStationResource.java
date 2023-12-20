@@ -47,7 +47,7 @@ public class PowerStationResource {
 
 
     @GetMapping("/count")
-    public ResponseEntity<Map<PowerStationState, Long>> getConnectedPowerStationsCount() {
+    public ResponseEntity<Map<PowerStationState, Integer>> getConnectedPowerStationsCount() {
         return ResponseEntity.ok(powerStationService.countPowerStationsByStates());
     }
 
