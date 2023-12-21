@@ -26,7 +26,8 @@ public class PowerProductionAggregationResource {
             @RequestParam Integer duration
     ) {
         return ResponseEntity.ok(
-                powerProductionAggregationService.getLastRecords(periodType, duration).stream()
+                powerProductionAggregationService.getLastRecords(periodType, duration)
+                        .stream()
                         .map(PowerProductionAggregationMapper::mapToDTO)
                         .toList()
         );

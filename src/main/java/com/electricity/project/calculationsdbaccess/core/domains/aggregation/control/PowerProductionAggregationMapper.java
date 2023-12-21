@@ -5,13 +5,15 @@ import com.electricity.project.calculationsdbaccess.core.domains.aggregation.ent
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PowerProductionAggregationMapper {
 
     public static PowerProductionAggregationDTO mapToDTO(PowerProductionAggregation powerProductionAggregation) {
         return PowerProductionAggregationDTO.builder()
-                .aggregationValue(powerProductionAggregation.getAggregationValue())
-                .powerStations(powerProductionAggregation.getAggregatedPowerStations())
+                .aggregationValue(Optional.ofNullable(powerProductionAggregation.getAggregationValue()))
+                .powerStations(Optional.ofNullable(powerProductionAggregation.getAggregatedPowerStations()))
                 .timestamp(powerProductionAggregation.getTimestamp())
                 .build();
     }

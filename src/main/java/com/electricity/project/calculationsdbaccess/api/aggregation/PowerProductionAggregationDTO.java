@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Value.Immutable
 @Value.Style
 @JsonSerialize(as = ImmutablePowerProductionAggregationDTO.class)
 @JsonDeserialize(as = ImmutablePowerProductionAggregationDTO.class)
+
 public interface PowerProductionAggregationDTO {
 
     static ImmutablePowerProductionAggregationDTO.Builder builder() {
@@ -19,10 +21,10 @@ public interface PowerProductionAggregationDTO {
     }
 
     @JsonProperty(value = "aggregatedValue")
-    Long getAggregationValue();
+    Optional<Long> getAggregationValue();
 
     @JsonProperty(value = "powerStations")
-    Long getPowerStations();
+    Optional<Long> getPowerStations();
 
     @JsonProperty(value = "timestamp")
     LocalDateTime getTimestamp();

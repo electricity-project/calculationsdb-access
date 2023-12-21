@@ -71,8 +71,7 @@ public class PowerProductionAggregationService {
         LinkedList<PowerProductionAggregation> resultsBefore = new LinkedList<>();
         LocalDateTime firstTimestampInResultList = resultList.getFirst().getTimestamp();
 
-        LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
-        for (LocalDateTime timestamp = now;
+        for (LocalDateTime timestamp = parseDateTimeNow(periodType);
              timestamp.isAfter(firstTimestampInResultList);
              timestamp = parseTime(timestamp, periodType)) {
             resultsBefore.add(buildEmptyAggregation(timestamp, periodType));
@@ -86,6 +85,14 @@ public class PowerProductionAggregationService {
         }
 
         return resultsBefore;
+    }
+
+    private static LocalDateTime parseDateTimeNow(AggregationPeriodType periodType) {
+        return switch (periodType){
+            case MINUTE -> LocalDateTime.now().withSecond(0).withNano(0);
+            case HOUR -> LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+            case DAY -> LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        };
     }
 
     private PowerProductionAggregation buildEmptyAggregation(LocalDateTime timestamp, AggregationPeriodType periodType) {
