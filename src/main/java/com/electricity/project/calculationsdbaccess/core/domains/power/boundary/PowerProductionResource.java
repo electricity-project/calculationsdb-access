@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.boundary;
 
 
+import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationPeriodType;
 import com.electricity.project.calculationsdbaccess.api.production.PowerProductionDTO;
 import com.electricity.project.calculationsdbaccess.core.domains.power.control.PowerProductionMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.power.control.PowerProductionService;
@@ -8,7 +9,6 @@ import com.electricity.project.calculationsdbaccess.core.domains.power.entity.Po
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +42,12 @@ public class PowerProductionResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<PowerProductionDTO>> getPowerProductionForIpv6(@RequestParam String ipv6, Pageable pageable) {
-        return ResponseEntity.ok(powerProductionService.getPowerProductionByIpv6(ipv6, pageable)
+    public ResponseEntity<List<PowerProductionDTO>> getPowerProductionForIpv6(
+            @RequestParam String ipv6,
+            @RequestParam AggregationPeriodType periodType,
+            @RequestParam Integer duration
+    ) {
+        return ResponseEntity.ok(powerProductionService.getPowerProductionByIpv6(ipv6, periodType, duration)
                 .stream()
                 .map(PowerProductionMapper::mapToDTO)
                 .toList()

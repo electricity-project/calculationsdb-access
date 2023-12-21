@@ -1,11 +1,13 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.control;
 
+import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationPeriodType;
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
+import com.electricity.project.calculationsdbaccess.infrastructure.FilterDateParser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,8 +25,9 @@ public class PowerProductionService {
         return powerProductionRepository.saveAll(powerProductionList);
     }
 
-    public List<PowerProduction> getPowerProductionByIpv6(String ipv6, Pageable pageable){
-        return powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, pageable);
+    public List<PowerProduction> getPowerProductionByIpv6(String ipv6, AggregationPeriodType periodType, Integer duration) {
+        LocalDateTime filterDate = FilterDateParser.createFilterDate(periodType, duration);
+        return powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
     }
 
 }

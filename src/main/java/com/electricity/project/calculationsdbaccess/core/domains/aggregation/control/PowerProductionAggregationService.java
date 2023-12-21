@@ -3,10 +3,10 @@ package com.electricity.project.calculationsdbaccess.core.domains.aggregation.co
 import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationPeriodType;
 import com.electricity.project.calculationsdbaccess.core.domains.aggregation.control.repository.PowerProductionAggregationRepository;
 import com.electricity.project.calculationsdbaccess.core.domains.aggregation.entity.PowerProductionAggregation;
+import com.electricity.project.calculationsdbaccess.infrastructure.FilterDateParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -18,18 +18,10 @@ public class PowerProductionAggregationService {
 
     public List<PowerProductionAggregation> getLastRecords(AggregationPeriodType periodType, Integer duration) {
         return aggregationMap.get(periodType)
-                .findByOrderByTimestampAsc(createFilterDate(periodType, duration))
+                .findByOrderByTimestampAsc(FilterDateParser.createFilterDate(periodType, duration))
                 .stream()
                 .map(PowerProductionAggregation.class::cast)
                 .toList();
-    }
-
-    private static LocalDateTime createFilterDate(AggregationPeriodType periodType, Integer duration) {
-        return switch (periodType) {
-            case MINUTE -> LocalDateTime.now().minusMinutes(duration);
-            case HOUR -> LocalDateTime.now().minusHours(duration);
-            case DAY -> LocalDateTime.now().minusDays(duration);
-        };
     }
 
 }
