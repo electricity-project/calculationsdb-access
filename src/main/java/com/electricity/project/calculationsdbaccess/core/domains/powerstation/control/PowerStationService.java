@@ -1,5 +1,6 @@
 package com.electricity.project.calculationsdbaccess.core.domains.powerstation.control;
 
+import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationFilterDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationIpv6Address;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.IPowerStationCount;
@@ -86,11 +87,7 @@ public class PowerStationService {
         return powerStation;
     }
 
-    public Optional<PowerStation> findPowerStationById(Long id) {
-        return powerStationRepository.findById(id);
-    }
-
-    public Page<PowerStation> getPowerStations(Pageable pageable) {
-        return powerStationRepository.findAll(pageable);
+    public Page<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO, Pageable pageable) {
+        return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO), pageable);
     }
 }
