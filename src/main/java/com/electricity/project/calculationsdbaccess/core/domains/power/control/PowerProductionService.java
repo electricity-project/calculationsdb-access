@@ -40,4 +40,10 @@ public class PowerProductionService {
         return resultList;
     }
 
+    public List<PowerProduction> getPowerProductionForDate(LocalDateTime time) {
+        LocalDateTime timeRoundedUpToMinutes = time.withSecond(0).withNano(0);
+        return powerProductionRepository.getByTimestampAfterAndTimestampBefore(
+                timeRoundedUpToMinutes,
+                timeRoundedUpToMinutes.plusMinutes(1));
+    }
 }
