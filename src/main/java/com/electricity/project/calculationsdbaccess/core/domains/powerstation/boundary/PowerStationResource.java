@@ -2,6 +2,7 @@ package com.electricity.project.calculationsdbaccess.core.domains.powerstation.b
 
 import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationDTO;
+import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationFilterDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
@@ -11,7 +12,8 @@ import com.electricity.project.calculationsdbaccess.core.domains.powerstation.en
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,9 +42,15 @@ public class PowerStationResource {
         return ResponseEntity.ok(savedPowerStations.stream().map(PowerStationMapper::mapToDTO).toList());
     }
 
-    @GetMapping
-    public ResponseEntity<Page<PowerStationDTO>> getPowerStations(Pageable pageable) {
-        return ResponseEntity.ok(powerStationService.getPowerStations(pageable).map(PowerStationMapper::mapToDTO));
+    @PostMapping("/all")
+    public ResponseEntity<Page<PowerStationDTO>> getPowerStations(
+            @RequestParam int size,
+            @RequestParam int page,
+            Sort sort,
+            @RequestBody PowerStationFilterDTO powerStationFilterDTO
+    ) {
+        return ResponseEntity.ok(powerStationService.getPowerStations(powerStationFilterDTO, PageRequest.of(page, size, sort))
+                .map(PowerStationMapper::mapToDTO));
     }
 
 
