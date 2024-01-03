@@ -1,7 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.powerstation.control;
 
-import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.IPowerStationCount;
+import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

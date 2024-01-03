@@ -40,7 +40,11 @@ public class PowerProductionAggregationService {
         List<PowerProductionAggregation> resultList = fillMissingValuesBetween(periodType, productionAggregations);
 
         if (resultList.size() != duration) {
-            return fillMissingValuesBefore(duration, periodType, resultList);
+            resultList = fillMissingValuesBefore(duration, periodType, resultList);
+        }
+
+        if (resultList.size() != duration) {
+           return fillMissingValuesAfter(duration, periodType, resultList);
         }
 
         return resultList;
@@ -67,7 +71,7 @@ public class PowerProductionAggregationService {
         return resultList;
     }
 
-    private LinkedList<PowerProductionAggregation> fillMissingValuesBefore(Integer duration, AggregationPeriodType periodType, List<PowerProductionAggregation> resultList) {
+    private List<PowerProductionAggregation> fillMissingValuesBefore(Integer duration, AggregationPeriodType periodType, List<PowerProductionAggregation> resultList) {
         LinkedList<PowerProductionAggregation> resultsBefore = new LinkedList<>();
         LocalDateTime firstTimestampInResultList = resultList.getFirst().getTimestamp();
 
@@ -87,8 +91,20 @@ public class PowerProductionAggregationService {
         return resultsBefore;
     }
 
+    private List<PowerProductionAggregation> fillMissingValuesAfter(Integer duration, AggregationPeriodType periodType, List<PowerProductionAggregation> resultList) {
+        int missingValues = duration - resultList.size();
+        LocalDateTime lastDate = resultList.getLast().getTimestamp();
+
+        for (int i = 0; i < missingValues; i++) {
+            lastDate = parseTime(lastDate, periodType);
+            resultList.add(buildEmptyAggregation(lastDate, periodType));
+        }
+
+        return resultList;
+    }
+
     private static LocalDateTime parseDateTimeNow(AggregationPeriodType periodType) {
-        return switch (periodType){
+        return switch (periodType) {
             case MINUTE -> LocalDateTime.now().withSecond(0).withNano(0);
             case HOUR -> LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
             case DAY -> LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
