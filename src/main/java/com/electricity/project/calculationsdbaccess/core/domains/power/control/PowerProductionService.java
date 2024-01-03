@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -15,6 +16,7 @@ import java.util.List;
 public class PowerProductionService {
 
     private final PowerProductionRepository powerProductionRepository;
+    private final MissingPowerProductionFiller missingPowerProductionFiller;
 
     public PowerProduction savePowerProduction(PowerProduction powerProduction) {
         return powerProductionRepository.save(powerProduction);
@@ -27,7 +29,15 @@ public class PowerProductionService {
 
     public List<PowerProduction> getPowerProductionByIpv6(String ipv6, AggregationPeriodType periodType, Integer duration) {
         LocalDateTime filterDate = FilterDateParser.createFilterDate(periodType, duration);
-        return powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
+        List<PowerProduction> resultList = powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
+
+        long durationInMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), filterDate);
+
+        if (resultList.size() != durationInMinutes) {
+            return missingPowerProductionFiller.fillMissingTimestamps(ipv6, durationInMinutes, resultList);
+        }
+
+        return resultList;
     }
 
 }
