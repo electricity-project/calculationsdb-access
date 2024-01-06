@@ -42,6 +42,11 @@ public class PowerStationResource {
         return ResponseEntity.ok(savedPowerStations.stream().map(PowerStationMapper::mapToDTO).toList());
     }
 
+    @GetMapping
+    public ResponseEntity<PowerStationDTO> getPowerStation(String ipv6) {
+        return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.getPowerStationByIpv6(ipv6)));
+    }
+
     @PostMapping("/all")
     public ResponseEntity<Page<PowerStationDTO>> getPowerStations(
             @RequestParam int size,
@@ -52,7 +57,6 @@ public class PowerStationResource {
         return ResponseEntity.ok(powerStationService.getPowerStations(powerStationFilterDTO, PageRequest.of(page, size, sort))
                 .map(PowerStationMapper::mapToDTO));
     }
-
 
     @GetMapping("/count")
     public ResponseEntity<Map<PowerStationState, Integer>> getConnectedPowerStationsCount() {

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PowerStationService {
 
+    private static final String ACTION_GET = "GET";
     private static final String ACTION_DISCONNECT = "DISCONNECT";
     private final PowerStationRepository powerStationRepository;
 
@@ -60,6 +61,11 @@ public class PowerStationService {
                 .forEach(state -> powerStationsStates.putIfAbsent(state, 0));
 
         return powerStationsStates;
+    }
+
+    public PowerStation getPowerStationByIpv6(String ipv6Address) {
+        return findPowerStationByIpv6(ipv6Address)
+                .orElseThrow(() -> new InvalidPowerStationIpv6Address(ACTION_GET, ipv6Address));
     }
 
     public Optional<PowerStation> findPowerStationByIpv6(String ipv6) {
