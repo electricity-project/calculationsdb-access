@@ -34,7 +34,7 @@ public class WeatherApiResource {
     @ExceptionHandler(NoWeatherApiKeyFound.class)
     private ResponseEntity<ErrorDTO> handleNoWeatherApiKeyFound(NoWeatherApiKeyFound exception) {
         log.error("No weather api key in database", exception);
-        return ResponseEntity.badRequest().body(ErrorDTO.builder().error(exception.getMessage()).build());
+        return ResponseEntity.internalServerError().body(ErrorDTO.builder().error(exception.getMessage()).build());
     }
 
     @ExceptionHandler({InvalidWeatherApiKey.class, IsCurrentWeatherApiKey.class})
