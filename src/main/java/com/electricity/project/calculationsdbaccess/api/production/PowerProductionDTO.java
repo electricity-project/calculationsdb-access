@@ -29,7 +29,7 @@ public interface PowerProductionDTO {
     PowerStationState getState();
 
     @JsonProperty(value = "power", required = true)
-    Long getProducedPower();
+    Optional<Long> getProducedPower();
 
     @JsonProperty(value = "timestamp", required = true)
     LocalDateTime getTimestamp();

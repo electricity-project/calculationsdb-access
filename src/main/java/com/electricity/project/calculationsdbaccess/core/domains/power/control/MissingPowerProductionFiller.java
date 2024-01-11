@@ -1,5 +1,6 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.control;
 
+import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,10 @@ import java.util.List;
 public class MissingPowerProductionFiller {
 
     public List<PowerProduction> fillMissingTimestamps(String ipv6, long duration, List<PowerProduction> powerProductions) {
+        if (powerProductions.isEmpty()) {
+            return fillMissingValuesIfListIsEmpty(ipv6, duration, powerProductions);
+        }
+
         List<PowerProduction> resultList = fillMissingValuesBetween(ipv6, powerProductions);
 
         if (resultList.size() != duration) {
@@ -22,6 +27,14 @@ public class MissingPowerProductionFiller {
         }
 
         return resultList;
+    }
+
+    private List<PowerProduction> fillMissingValuesIfListIsEmpty(String ipv6, long duration, List<PowerProduction> powerProductions) {
+        LocalDateTime now = LocalDateTime.now();
+        for (int i = 0; i < duration; i++) {
+            powerProductions.add(buildEmptyPowerProduction(ipv6, now.minusMinutes(1)));
+        }
+        return powerProductions;
     }
 
     private List<PowerProduction> fillMissingValuesBetween(String ipv6, List<PowerProduction> powerProductions) {
@@ -76,9 +89,9 @@ public class MissingPowerProductionFiller {
         return powerProductions;
     }
 
-    private PowerProduction buildEmptyPowerProduction(String ipv6, LocalDateTime timestamp) {
+    public static PowerProduction buildEmptyPowerProduction(String ipv6, LocalDateTime timestamp) {
         return PowerProduction.builder()
-                .state(null)
+                .state(PowerStationState.WORKING)
                 .producedPower(null)
                 .ipv6(ipv6)
                 .timestamp(timestamp)

@@ -5,15 +5,17 @@ import com.electricity.project.calculationsdbaccess.core.domains.power.entity.Po
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class PowerProductionMapper {
 
     public static PowerProductionDTO mapToDTO(PowerProduction powerProduction) {
         return PowerProductionDTO.builder()
-                .id(powerProduction.getId())
+                .id(Optional.ofNullable(powerProduction.getId()))
                 .ipv6Address(powerProduction.getIpv6())
                 .state(powerProduction.getState())
-                .producedPower(powerProduction.getProducedPower())
+                .producedPower(Optional.ofNullable(powerProduction.getProducedPower()))
                 .timestamp(powerProduction.getTimestamp())
                 .build();
     }
@@ -23,7 +25,7 @@ public final class PowerProductionMapper {
                 .id(powerProductionDTO.getId().orElse(-1L))
                 .ipv6(powerProductionDTO.getIpv6Address())
                 .state(powerProductionDTO.getState())
-                .producedPower(powerProductionDTO.getProducedPower())
+                .producedPower(powerProductionDTO.getProducedPower().orElse(0L))
                 .timestamp(powerProductionDTO.getTimestamp())
                 .build();
     }

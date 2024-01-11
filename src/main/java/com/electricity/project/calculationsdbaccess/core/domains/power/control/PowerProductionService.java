@@ -31,7 +31,7 @@ public class PowerProductionService {
         LocalDateTime filterDate = FilterDateParser.createFilterDate(periodType, duration);
         List<PowerProduction> resultList = powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
 
-        long durationInMinutes = ChronoUnit.MINUTES.between(LocalDateTime.now(), filterDate);
+        long durationInMinutes = ChronoUnit.MINUTES.between(filterDate, LocalDateTime.now());
 
         if (resultList.size() != durationInMinutes) {
             return missingPowerProductionFiller.fillMissingTimestamps(ipv6, durationInMinutes, resultList);
