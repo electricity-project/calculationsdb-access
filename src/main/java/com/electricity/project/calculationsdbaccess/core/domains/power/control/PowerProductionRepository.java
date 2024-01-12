@@ -14,5 +14,5 @@ public interface PowerProductionRepository extends JpaRepository<PowerProduction
     @Query("select p from PowerProduction p where p.ipv6 = :ipv6 and p.timestamp >=:filterDate order by p.timestamp DESC")
     List<PowerProduction> getByIpv6OrderByTimestampDesc(String ipv6, LocalDateTime filterDate);
 
-    List<PowerProduction> getByTimestampAfterAndTimestampBefore(LocalDateTime startingDate, LocalDateTime endingDate);
+    List<PowerProduction> getByTimestampGreaterThanEqualAndTimestampLessThan(LocalDateTime startingDate, LocalDateTime endingDate);
 }

@@ -42,7 +42,7 @@ public class PowerProductionService {
 
     public List<PowerProduction> getPowerProductionForDate(LocalDateTime time) {
         LocalDateTime timeRoundedUpToMinutes = time.withSecond(0).withNano(0);
-        return powerProductionRepository.getByTimestampAfterAndTimestampBefore(
+        return powerProductionRepository.getByTimestampGreaterThanEqualAndTimestampLessThan(
                 timeRoundedUpToMinutes,
                 timeRoundedUpToMinutes.plusMinutes(1));
     }
