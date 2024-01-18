@@ -1,5 +1,6 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.control;
 
+import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationPeriodType;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,13 +37,16 @@ class MissingPowerProductionFillerTest {
         powerProductions.set(2, buildEmptyPowerProduction(dateTime.minusMinutes(2)));
         powerProductions.set(3, buildEmptyPowerProduction(dateTime.minusMinutes(3)));
 
-        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, duration, powerProductionWithMissingValues);
+        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, AggregationPeriodType.MINUTE, duration, powerProductionWithMissingValues);
 
         assertEquals(powerProductions.size(), resultList.size());
         for (int i = 0; i < resultList.size(); i++) {
             assertEquals(powerProductions.get(i).getState(), resultList.get(i).getState());
             assertEquals(powerProductions.get(i).getProducedPower(), resultList.get(i).getProducedPower());
-            assertEquals(powerProductions.get(i).getTimestamp(), resultList.get(i).getTimestamp());
+            assertEquals(
+                    powerProductions.get(i).getTimestamp().withSecond(0).withNano(0),
+                    resultList.get(i).getTimestamp().withSecond(0).withNano(0)
+            );
         }
     }
 
@@ -56,7 +60,7 @@ class MissingPowerProductionFillerTest {
         powerProductions.set(1, buildEmptyPowerProduction(dateTime.minusMinutes(1)));
         powerProductions.set(2, buildEmptyPowerProduction(dateTime.minusMinutes(2)));
 
-        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, duration, powerProductionWithMissingValues);
+        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, AggregationPeriodType.MINUTE, duration, powerProductionWithMissingValues);
 
         assertEquals(powerProductions.size(), resultList.size());
         for (int i = 0; i < resultList.size(); i++) {
@@ -75,7 +79,7 @@ class MissingPowerProductionFillerTest {
         powerProductions.set(powerProductions.size() - 2, buildEmptyPowerProduction(dateTime.minusMinutes(powerProductions.size() - 2)));
         powerProductions.set(powerProductions.size() - 3, buildEmptyPowerProduction(dateTime.minusMinutes(powerProductions.size() - 3)));
 
-        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, duration, powerProductionWithMissingValues);
+        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, AggregationPeriodType.MINUTE, duration, powerProductionWithMissingValues);
 
         assertEquals(powerProductions.size(), resultList.size());
         for (int i = 0; i < resultList.size(); i++) {
@@ -102,7 +106,7 @@ class MissingPowerProductionFillerTest {
         powerProductions.set(6, buildEmptyPowerProduction(dateTime.minusMinutes(6)));
         powerProductions.set(7, buildEmptyPowerProduction(dateTime.minusMinutes(7)));
 
-        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, duration, powerProductionWithMissingValues);
+        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, AggregationPeriodType.MINUTE, duration, powerProductionWithMissingValues);
 
         assertEquals(powerProductions.size(), resultList.size());
         for (int i = 0; i < resultList.size(); i++) {
@@ -129,7 +133,7 @@ class MissingPowerProductionFillerTest {
         powerProductions.set(powerProductions.size() - 1, buildEmptyPowerProduction(dateTime.minusMinutes(powerProductions.size() - 1)));
         powerProductions.set(powerProductions.size() - 2, buildEmptyPowerProduction(dateTime.minusMinutes(powerProductions.size() - 2)));
 
-        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, duration, powerProductionWithMissingValues);
+        List<PowerProduction> resultList = missingPowerProductionFiller.fillMissingTimestamps(IPV6, AggregationPeriodType.MINUTE, duration, powerProductionWithMissingValues);
 
         assertEquals(powerProductions.size(), resultList.size());
         for (int i = 0; i < resultList.size(); i++) {

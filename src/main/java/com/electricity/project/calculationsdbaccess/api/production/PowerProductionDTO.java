@@ -26,7 +26,7 @@ public interface PowerProductionDTO {
     String getIpv6Address();
 
     @JsonProperty(value = "state", required = true)
-    PowerStationState getState();
+    Optional<PowerStationState> getState();
 
     @JsonProperty(value = "power", required = true)
     Optional<Long> getProducedPower();

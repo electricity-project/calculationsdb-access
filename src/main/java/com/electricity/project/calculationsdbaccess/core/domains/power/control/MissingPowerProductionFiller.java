@@ -1,6 +1,6 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.control;
 
-import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
+import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationPeriodType;
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import org.springframework.stereotype.Component;
 
@@ -11,43 +11,46 @@ import java.util.List;
 @Component
 public class MissingPowerProductionFiller {
 
-    public List<PowerProduction> fillMissingTimestamps(String ipv6, long duration, List<PowerProduction> powerProductions) {
+    public List<PowerProduction> fillMissingTimestamps(String ipv6, AggregationPeriodType periodType,
+                                                       int duration, List<PowerProduction> powerProductions) {
         if (powerProductions.isEmpty()) {
-            return fillMissingValuesIfListIsEmpty(ipv6, duration, powerProductions);
+            return fillMissingValuesIfListIsEmpty(ipv6, duration);
         }
 
-        List<PowerProduction> resultList = fillMissingValuesBetween(ipv6, powerProductions);
+        List<PowerProduction> resultList = fillMissingValuesBetween(periodType, powerProductions, ipv6);
 
         if (resultList.size() != duration) {
-            resultList = fillMissingValuesBefore(ipv6, duration, resultList);
+            resultList = fillMissingValuesBefore(duration, periodType, resultList, ipv6);
         }
 
         if (resultList.size() != duration) {
-            return fillMissingValuesAfter(ipv6, duration, resultList);
+            return fillMissingValuesAfter(ipv6, duration, periodType, resultList);
         }
 
         return resultList;
     }
 
-    private List<PowerProduction> fillMissingValuesIfListIsEmpty(String ipv6, long duration, List<PowerProduction> powerProductions) {
+    private List<PowerProduction> fillMissingValuesIfListIsEmpty(String ipv6, int duration) {
+        List<PowerProduction> resultList = new LinkedList<>();
         LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < duration; i++) {
-            powerProductions.add(buildEmptyPowerProduction(ipv6, now.minusMinutes(1)));
+            resultList.add(buildEmptyPowerProduction(ipv6, now.minusMinutes(1)));
         }
-        return powerProductions;
+        return resultList;
     }
 
-    private List<PowerProduction> fillMissingValuesBetween(String ipv6, List<PowerProduction> powerProductions) {
+    private List<PowerProduction> fillMissingValuesBetween(AggregationPeriodType periodType,
+                                                           List<PowerProduction> powerProductions, String ipv6) {
         List<PowerProduction> resultList = new LinkedList<>();
         int i = 0;
 
-        LocalDateTime lastDateInProductionAggregation = powerProductions.getLast().getTimestamp();
-        for (LocalDateTime timestamp = powerProductions.getFirst().getTimestamp();
+        LocalDateTime lastDateInProductionAggregation = powerProductions.getLast().getTimestamp().withSecond(0).withNano(0);
+        for (LocalDateTime timestamp = powerProductions.getFirst().getTimestamp().withSecond(0).withNano(0);
              timestamp.isAfter(lastDateInProductionAggregation) || timestamp.isEqual(lastDateInProductionAggregation);
-             timestamp = timestamp.minusMinutes(1)) {
+             timestamp = parseTime(timestamp, periodType)) {
 
             PowerProduction powerProduction = powerProductions.get(i);
-            if (!powerProduction.getTimestamp().equals(timestamp)) {
+            if (!powerProduction.getTimestamp().withSecond(0).withNano(0).equals(timestamp)) {
                 resultList.add(buildEmptyPowerProduction(ipv6, timestamp));
             } else {
                 resultList.add(powerProduction);
@@ -57,41 +60,59 @@ public class MissingPowerProductionFiller {
         return resultList;
     }
 
-    private List<PowerProduction> fillMissingValuesBefore(String ipv6, long duration, List<PowerProduction> powerProductions) {
-        LinkedList<PowerProduction> resultList = new LinkedList<>();
-        LocalDateTime firstTimestampInResultList = powerProductions.getFirst().getTimestamp();
+    private List<PowerProduction> fillMissingValuesBefore(int duration, AggregationPeriodType periodType,
+                                                          List<PowerProduction> resultList, String ipv6) {
+        LinkedList<PowerProduction> resultsBefore = new LinkedList<>();
+        LocalDateTime firstTimestampInResultList = resultList.getFirst().getTimestamp();
 
-        for (LocalDateTime timestamp = LocalDateTime.now().withSecond(0).withNano(0);
+        for (LocalDateTime timestamp = parseDateTimeNow(periodType);
              timestamp.isAfter(firstTimestampInResultList);
-             timestamp = timestamp.minusMinutes(1)) {
-            resultList.add(buildEmptyPowerProduction(ipv6, timestamp));
+             timestamp = parseTime(timestamp, periodType)) {
+            resultsBefore.add(buildEmptyPowerProduction(ipv6, timestamp));
         }
-        resultList.addAll(powerProductions);
+        resultsBefore.addAll(resultList);
 
-        if (resultList.size() > duration) {
-            for (int i = 0; i < resultList.size() - duration; i++) {
-                resultList.removeLast();
+        if (resultsBefore.size() > duration) {
+            for (int i = 0; i < resultsBefore.size() - duration + 1; i++) {
+                resultsBefore.removeLast();
             }
+        }
+
+        return resultsBefore;
+    }
+
+    private List<PowerProduction> fillMissingValuesAfter(String ipv6, int duration, AggregationPeriodType periodType,
+                                                         List<PowerProduction> resultList) {
+        int missingValues = duration - resultList.size();
+        LocalDateTime lastDate = resultList.getLast().getTimestamp();
+
+        for (int i = 0; i < missingValues; i++) {
+            lastDate = parseTime(lastDate, periodType);
+            resultList.add(buildEmptyPowerProduction(ipv6, lastDate));
         }
 
         return resultList;
     }
 
-    private List<PowerProduction> fillMissingValuesAfter(String ipv6, long duration, List<PowerProduction> powerProductions) {
-        long missingValues = duration - powerProductions.size();
-        LocalDateTime lastDate = powerProductions.getLast().getTimestamp();
+    private static LocalDateTime parseDateTimeNow(AggregationPeriodType periodType) {
+        return switch (periodType) {
+            case MINUTE -> LocalDateTime.now().withSecond(0).withNano(0);
+            case HOUR -> LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+            case DAY -> LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        };
+    }
 
-        for (long i = 0; i < missingValues; i++) {
-            lastDate = lastDate.minusMinutes(1);
-            powerProductions.add(buildEmptyPowerProduction(ipv6, lastDate));
-        }
-
-        return powerProductions;
+    private static LocalDateTime parseTime(LocalDateTime timestamp, AggregationPeriodType periodType) {
+        return switch (periodType) {
+            case MINUTE -> timestamp.minusMinutes(1);
+            case HOUR -> timestamp.minusHours(1);
+            case DAY -> timestamp.minusDays(1);
+        };
     }
 
     public static PowerProduction buildEmptyPowerProduction(String ipv6, LocalDateTime timestamp) {
         return PowerProduction.builder()
-                .state(PowerStationState.WORKING)
+                .state(null)
                 .producedPower(null)
                 .ipv6(ipv6)
                 .timestamp(timestamp)
