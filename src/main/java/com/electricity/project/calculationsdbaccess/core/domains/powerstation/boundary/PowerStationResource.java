@@ -64,6 +64,14 @@ public class PowerStationResource {
                 .map(PowerStationMapper::mapToDTO));
     }
 
+    @PostMapping("/all_filter_list")
+    public ResponseEntity<List<PowerStationDTO>> getPowerStations(
+            @RequestBody PowerStationFilterDTO powerStationFilterDTO
+    ) {
+        return ResponseEntity.ok(powerStationService.getPowerStations(powerStationFilterDTO).stream()
+                .map(PowerStationMapper::mapToDTO).toList());
+    }
+
     @GetMapping("/count")
     public ResponseEntity<Map<PowerStationState, Integer>> getConnectedPowerStationsCount() {
         return ResponseEntity.ok(powerStationService.countPowerStationsByStates());

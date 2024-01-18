@@ -102,4 +102,7 @@ public class PowerStationService {
     public Page<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO, Pageable pageable) {
         return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO), pageable);
     }
+    public List<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO) {
+        return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO));
+    }
 }
