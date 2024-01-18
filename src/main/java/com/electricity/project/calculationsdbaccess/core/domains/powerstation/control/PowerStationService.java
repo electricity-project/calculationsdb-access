@@ -2,6 +2,7 @@ package com.electricity.project.calculationsdbaccess.core.domains.powerstation.c
 
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationFilterDTO;
 import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStationState;
+import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationId;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationIpv6Address;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.IPowerStationCount;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
@@ -61,6 +62,11 @@ public class PowerStationService {
                 .forEach(state -> powerStationsStates.putIfAbsent(state, 0));
 
         return powerStationsStates;
+    }
+
+    public PowerStation getPowerStationById(Long id) {
+        return powerStationRepository.findById(id)
+                .orElseThrow(() -> new InvalidPowerStationId(ACTION_GET, id));
     }
 
     public PowerStation getPowerStationByIpv6(String ipv6Address) {

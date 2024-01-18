@@ -7,6 +7,7 @@ import com.electricity.project.calculationsdbaccess.api.powerstation.PowerStatio
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.PowerStationService;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.IncorrectPowerStationType;
+import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationId;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.control.exception.InvalidPowerStationIpv6Address;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,13 @@ public class PowerStationResource {
         return ResponseEntity.ok(savedPowerStations.stream().map(PowerStationMapper::mapToDTO).toList());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PowerStationDTO> getPowerStationById(@PathVariable Long id) {
+        return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.getPowerStationById(id)));
+    }
+
     @GetMapping
-    public ResponseEntity<PowerStationDTO> getPowerStation(String ipv6) {
+    public ResponseEntity<PowerStationDTO> getPowerStationByIpv6(String ipv6) {
         return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.getPowerStationByIpv6(ipv6)));
     }
 
@@ -84,6 +90,12 @@ public class PowerStationResource {
     @ExceptionHandler(InvalidPowerStationIpv6Address.class)
     private ResponseEntity<ErrorDTO> handleInvalidPowerStationIpv6Address(InvalidPowerStationIpv6Address exception) {
         log.error("Invalid power station ipv6", exception);
+        return ResponseEntity.badRequest().body(ErrorDTO.builder().error(exception.getMessage()).build());
+    }
+
+    @ExceptionHandler(InvalidPowerStationId.class)
+    private ResponseEntity<ErrorDTO> handleInvalidPowerStationId(InvalidPowerStationId exception) {
+        log.error("Invalid power station id", exception);
         return ResponseEntity.badRequest().body(ErrorDTO.builder().error(exception.getMessage()).build());
     }
 }
