@@ -5,21 +5,21 @@ import com.electricity.project.calculationsdbaccess.core.domains.weather.entity.
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WeatherApiKeyMapper {
 
-    public static WeatherApiKeyDTO mapToDTO(WeatherApiKey weatherApiKey){
+    public static WeatherApiKeyDTO mapToDTO(WeatherApiKey weatherApiKey) {
         return WeatherApiKeyDTO.builder()
                 .weatherApiKey(weatherApiKey.getApiKey())
                 .build();
     }
 
-    public static WeatherApiKey mapToEntity(WeatherApiKeyDTO weatherApiKeyDTO){
+    public static WeatherApiKey mapToEntity(WeatherApiKeyDTO weatherApiKeyDTO) {
         return WeatherApiKey.builder()
                 .id(null)
-                .changeDate(LocalDateTime.now())
+                .changeDate(ZonedDateTime.now())
                 .apiKey(weatherApiKeyDTO.getWeatherApiKey())
                 .build();
     }

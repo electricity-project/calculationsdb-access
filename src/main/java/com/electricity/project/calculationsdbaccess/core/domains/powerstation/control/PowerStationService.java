@@ -66,11 +66,13 @@ public class PowerStationService {
 
     public PowerStation getPowerStationById(Long id) {
         return powerStationRepository.findById(id)
+                .filter(PowerStation::isConnected)
                 .orElseThrow(() -> new InvalidPowerStationId(ACTION_GET, id));
     }
 
     public PowerStation getPowerStationByIpv6(String ipv6Address) {
         return findPowerStationByIpv6(ipv6Address)
+                .filter(PowerStation::isConnected)
                 .orElseThrow(() -> new InvalidPowerStationIpv6Address(ACTION_GET, ipv6Address));
     }
 
@@ -102,6 +104,7 @@ public class PowerStationService {
     public Page<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO, Pageable pageable) {
         return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO), pageable);
     }
+
     public List<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO) {
         return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO));
     }

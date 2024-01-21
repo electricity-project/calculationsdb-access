@@ -34,10 +34,14 @@ public interface PowerStationRepository extends JpaRepository<PowerStation, Long
                     .map(statePattern -> criteriaBuilder.equal(root.type(), criteriaBuilder.literal(statePattern.powerStationClass)))
                     .toArray(Predicate[]::new);
 
+            Path<Boolean> isConnected = root.get("isConnected");
+            Predicate connectedPredicate = criteriaBuilder.equal(isConnected, true);
+
             return criteriaBuilder.and(
                     ipv6Predicates.length == 0 ? criteriaBuilder.and() : criteriaBuilder.or(ipv6Predicates),
                     statePredicates.length == 0 ? criteriaBuilder.and() : criteriaBuilder.or(statePredicates),
-                    typePredicates.length == 0 ? criteriaBuilder.and() : criteriaBuilder.or(typePredicates)
+                    typePredicates.length == 0 ? criteriaBuilder.and() : criteriaBuilder.or(typePredicates),
+                    criteriaBuilder.or(connectedPredicate)
             );
         };
 

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @Value.Immutable
@@ -37,7 +37,7 @@ public interface PowerStationDTO {
     PowerStationState getState();
 
     @JsonProperty(value = "creationTime", required = true)
-    LocalDateTime getCreationTime();
+    ZonedDateTime getCreationTime();
 
     @JsonProperty(value = "maxPower", required = true)
     double getMaxPower();

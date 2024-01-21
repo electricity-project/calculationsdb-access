@@ -5,12 +5,12 @@ import com.electricity.project.calculationsdbaccess.core.domains.aggregation.ent
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface PowerProductionAggregationRepository<T extends PowerProductionAggregation> extends JpaRepository<T, Long>, AggregationEnumBean {
     @Query("select p from #{#entityName} p where p.timestamp >=:filterDate order by p.timestamp DESC")
-    List<T> findByOrderByTimestampAsc(LocalDateTime filterDate);
+    List<T> findByOrderByTimestampAsc(ZonedDateTime filterDate);
 
     @Override
     default AggregationPeriodType getAggregationEnum() {

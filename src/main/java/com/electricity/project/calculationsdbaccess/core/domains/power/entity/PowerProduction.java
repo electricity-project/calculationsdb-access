@@ -9,7 +9,7 @@ import org.hibernate.annotations.ResultCheckStyle;
 import org.hibernate.annotations.SQLInsert;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -39,7 +39,6 @@ public class PowerProduction {
     private PowerStationState state;
 
     @Column(nullable = false)
-    @JdbcTypeCode(SqlTypes.TIMESTAMP)
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
 }

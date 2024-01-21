@@ -6,7 +6,7 @@ import com.electricity.project.calculationsdbaccess.core.domains.power.entity.Po
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,13 +16,13 @@ class MissingPowerProductionFillerTest {
 
     private final MissingPowerProductionFiller missingPowerProductionFiller = new MissingPowerProductionFiller();
     private int duration;
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
     private List<PowerProduction> powerProductions;
     private static final String IPV6 = "::1";
 
     @BeforeEach
     void setUp() {
-        dateTime = LocalDateTime.now();
+        dateTime = ZonedDateTime.now();
         duration = 10;
         powerProductions = createListWithPowerProduction(dateTime, duration);
     }
@@ -142,7 +142,7 @@ class MissingPowerProductionFillerTest {
         }
     }
 
-    private static List<PowerProduction> createListWithPowerProduction(LocalDateTime dateTime, int duration) {
+    private static List<PowerProduction> createListWithPowerProduction(ZonedDateTime dateTime, int duration) {
         List<PowerProduction> resultList = new LinkedList<>();
 
         for (int i = 0; i < duration; i++) {
@@ -157,7 +157,7 @@ class MissingPowerProductionFillerTest {
         return resultList;
     }
 
-    private static PowerProduction buildEmptyPowerProduction(LocalDateTime dateTime) {
+    private static PowerProduction buildEmptyPowerProduction(ZonedDateTime dateTime) {
         return PowerProduction.builder()
                 .ipv6(IPV6)
                 .state(null)

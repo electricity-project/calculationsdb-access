@@ -1,5 +1,4 @@
-
-CREATE TABLE IF NOT EXISTS  weather_api_key
+CREATE TABLE IF NOT EXISTS weather_api_key
 (
     id          INTEGER      NOT NULL,
     api_key     VARCHAR(255) NOT NULL,

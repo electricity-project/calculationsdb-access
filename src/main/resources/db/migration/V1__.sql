@@ -1,22 +1,21 @@
-
 CREATE TABLE IF NOT EXISTS power_production
 (
-    id                 BIGINT       NOT NULL,
-    power_station_ipv6 VARCHAR(255) NOT NULL,
-    produced_power     FLOAT4       NOT NULL,
-    state              VARCHAR(255) NOT NULL,
+    id                 BIGINT                      NOT NULL,
+    power_station_ipv6 VARCHAR(255)                NOT NULL,
+    produced_power     FLOAT4                      NOT NULL,
+    state              VARCHAR(255)                NOT NULL,
     timestamp          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT power_production_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS power_station
 (
-    id            BIGINT       NOT NULL,
+    id            BIGINT                      NOT NULL,
     creation_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    ipv6address   VARCHAR(39)  NOT NULL,
-    is_connected  BOOLEAN      NOT NULL,
-    max_power     FLOAT8       NOT NULL,
-    state         VARCHAR(255) NOT NULL,
+    ipv6address   VARCHAR(39)                 NOT NULL,
+    is_connected  BOOLEAN                     NOT NULL,
+    max_power     FLOAT8                      NOT NULL,
+    state         VARCHAR(255)                NOT NULL,
     CONSTRAINT power_station_pkey PRIMARY KEY (id)
 );
 
@@ -33,27 +32,27 @@ CREATE SEQUENCE IF NOT EXISTS power_station_seq AS bigint START WITH 1 INCREMENT
 
 CREATE TABLE IF NOT EXISTS days_aggregation
 (
-    id                        BIGINT NOT NULL,
-    aggregated_power_stations BIGINT NOT NULL,
-    aggregation_value         BIGINT NOT NULL,
+    id                        BIGINT                      NOT NULL,
+    aggregated_power_stations BIGINT                      NOT NULL,
+    aggregation_value         BIGINT                      NOT NULL,
     timestamp                 TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT days_aggregation_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS hours_aggregation
 (
-    id                        BIGINT NOT NULL,
-    aggregated_power_stations BIGINT NOT NULL,
-    aggregation_value         BIGINT NOT NULL,
+    id                        BIGINT                      NOT NULL,
+    aggregated_power_stations BIGINT                      NOT NULL,
+    aggregation_value         BIGINT                      NOT NULL,
     timestamp                 TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT hours_aggregation_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS minutes_aggregation
 (
-    id                        BIGINT NOT NULL,
-    aggregated_power_stations BIGINT NOT NULL,
-    aggregation_value         BIGINT NOT NULL,
+    id                        BIGINT                      NOT NULL,
+    aggregated_power_stations BIGINT                      NOT NULL,
+    aggregation_value         BIGINT                      NOT NULL,
     timestamp                 TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     CONSTRAINT minutes_aggregation_pkey PRIMARY KEY (id)
 );

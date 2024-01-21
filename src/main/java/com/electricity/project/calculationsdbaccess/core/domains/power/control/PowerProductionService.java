@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -29,7 +29,7 @@ public class PowerProductionService {
     }
 
     public List<PowerProduction> getPowerProductionByIpv6(String ipv6, AggregationPeriodType periodType, Integer duration) {
-        LocalDateTime filterDate = FilterDateParser.createFilterDate(periodType, duration);
+        ZonedDateTime filterDate = FilterDateParser.createFilterDate(periodType, duration);
 
         List<PowerProduction> resultList = switch (periodType) {
             case MINUTE -> powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
@@ -65,8 +65,8 @@ public class PowerProductionService {
                 ).toList();
     }
 
-    public List<PowerProduction> getPowerProductionForDate(LocalDateTime time) {
-        LocalDateTime timeRoundedUpToMinutes = time.withSecond(0).withNano(0);
+    public List<PowerProduction> getPowerProductionForDate(ZonedDateTime time) {
+        ZonedDateTime timeRoundedUpToMinutes = time.withSecond(0).withNano(0);
         return powerProductionRepository.getByTimestampGreaterThanEqualAndTimestampLessThan(
                 timeRoundedUpToMinutes,
                 timeRoundedUpToMinutes.plusMinutes(1));

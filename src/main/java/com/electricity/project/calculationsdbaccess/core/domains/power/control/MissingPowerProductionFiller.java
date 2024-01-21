@@ -4,7 +4,7 @@ import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationP
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class MissingPowerProductionFiller {
 
     private List<PowerProduction> fillMissingValuesIfListIsEmpty(String ipv6, int duration) {
         List<PowerProduction> resultList = new LinkedList<>();
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         for (int i = 0; i < duration; i++) {
             resultList.add(buildEmptyPowerProduction(ipv6, now.minusMinutes(1)));
         }
@@ -44,8 +44,8 @@ public class MissingPowerProductionFiller {
         List<PowerProduction> resultList = new LinkedList<>();
         int i = 0;
 
-        LocalDateTime lastDateInProductionAggregation = powerProductions.getLast().getTimestamp().withSecond(0).withNano(0);
-        for (LocalDateTime timestamp = powerProductions.getFirst().getTimestamp().withSecond(0).withNano(0);
+        ZonedDateTime lastDateInProductionAggregation = powerProductions.getLast().getTimestamp().withSecond(0).withNano(0);
+        for (ZonedDateTime timestamp = powerProductions.getFirst().getTimestamp().withSecond(0).withNano(0);
              timestamp.isAfter(lastDateInProductionAggregation) || timestamp.isEqual(lastDateInProductionAggregation);
              timestamp = parseTime(timestamp, periodType)) {
 
@@ -63,9 +63,9 @@ public class MissingPowerProductionFiller {
     private List<PowerProduction> fillMissingValuesBefore(int duration, AggregationPeriodType periodType,
                                                           List<PowerProduction> resultList, String ipv6) {
         LinkedList<PowerProduction> resultsBefore = new LinkedList<>();
-        LocalDateTime firstTimestampInResultList = resultList.getFirst().getTimestamp();
+        ZonedDateTime firstTimestampInResultList = resultList.getFirst().getTimestamp();
 
-        for (LocalDateTime timestamp = parseDateTimeNow(periodType);
+        for (ZonedDateTime timestamp = parseDateTimeNow(periodType);
              timestamp.isAfter(firstTimestampInResultList);
              timestamp = parseTime(timestamp, periodType)) {
             resultsBefore.add(buildEmptyPowerProduction(ipv6, timestamp));
@@ -84,7 +84,7 @@ public class MissingPowerProductionFiller {
     private List<PowerProduction> fillMissingValuesAfter(String ipv6, int duration, AggregationPeriodType periodType,
                                                          List<PowerProduction> resultList) {
         int missingValues = duration - resultList.size();
-        LocalDateTime lastDate = resultList.getLast().getTimestamp();
+        ZonedDateTime lastDate = resultList.getLast().getTimestamp();
 
         for (int i = 0; i < missingValues; i++) {
             lastDate = parseTime(lastDate, periodType);
@@ -94,15 +94,15 @@ public class MissingPowerProductionFiller {
         return resultList;
     }
 
-    private static LocalDateTime parseDateTimeNow(AggregationPeriodType periodType) {
+    private static ZonedDateTime parseDateTimeNow(AggregationPeriodType periodType) {
         return switch (periodType) {
-            case MINUTE -> LocalDateTime.now().withSecond(0).withNano(0);
-            case HOUR -> LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
-            case DAY -> LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+            case MINUTE -> ZonedDateTime.now().withSecond(0).withNano(0);
+            case HOUR -> ZonedDateTime.now().withMinute(0).withSecond(0).withNano(0);
+            case DAY -> ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         };
     }
 
-    private static LocalDateTime parseTime(LocalDateTime timestamp, AggregationPeriodType periodType) {
+    private static ZonedDateTime parseTime(ZonedDateTime timestamp, AggregationPeriodType periodType) {
         return switch (periodType) {
             case MINUTE -> timestamp.minusMinutes(1);
             case HOUR -> timestamp.minusHours(1);
@@ -110,7 +110,7 @@ public class MissingPowerProductionFiller {
         };
     }
 
-    public static PowerProduction buildEmptyPowerProduction(String ipv6, LocalDateTime timestamp) {
+    public static PowerProduction buildEmptyPowerProduction(String ipv6, ZonedDateTime timestamp) {
         return PowerProduction.builder()
                 .state(null)
                 .producedPower(null)

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,14 +24,14 @@ class PowerProductionAggregationServiceTest {
     private final MissingPowerProductionAggregationFiller missingPowerProductionAggregationFiller = new MissingPowerProductionAggregationFiller();
     private Map<AggregationPeriodType, PowerProductionAggregationRepository<? extends PowerProductionAggregation>> aggregationMap;
     private PowerProductionAggregationService powerProductionAggregationService;
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
     private Integer duration;
     private List<PowerProductionAggregation> allPowerAggregation;
 
     @BeforeEach
     void setUp() {
         aggregationMap = new HashMap<>();
-        dateTime = LocalDateTime.now();
+        dateTime = ZonedDateTime.now();
         duration = 10;
         allPowerAggregation = createListWitPowerProduction(dateTime, duration);
     }
@@ -47,7 +47,7 @@ class PowerProductionAggregationServiceTest {
         allPowerAggregation.set(3, builtEmptyAggregation(dateTime.minusMinutes(3)));
 
         PowerProductionAggregationRepository powerProductionRepositories = Mockito.mock(PowerProductionAggregationRepository.class);
-        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(LocalDateTime.class))).thenReturn(aggregationsWithMissingValues);
+        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(ZonedDateTime.class))).thenReturn(aggregationsWithMissingValues);
 
         aggregationMap.put(AggregationPeriodType.MINUTE, powerProductionRepositories);
         powerProductionAggregationService = new PowerProductionAggregationService(aggregationMap, missingPowerProductionAggregationFiller);
@@ -74,7 +74,7 @@ class PowerProductionAggregationServiceTest {
         allPowerAggregation.set(2, builtEmptyAggregation(dateTime.minusMinutes(2)));
 
         PowerProductionAggregationRepository powerProductionRepositories = Mockito.mock(PowerProductionAggregationRepository.class);
-        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(LocalDateTime.class))).thenReturn(aggregationsWithMissingValues);
+        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(ZonedDateTime.class))).thenReturn(aggregationsWithMissingValues);
 
         aggregationMap.put(AggregationPeriodType.MINUTE, powerProductionRepositories);
         powerProductionAggregationService = new PowerProductionAggregationService(aggregationMap, missingPowerProductionAggregationFiller);
@@ -99,7 +99,7 @@ class PowerProductionAggregationServiceTest {
         allPowerAggregation.set(allPowerAggregation.size() - 3, builtEmptyAggregation(dateTime.minusMinutes(allPowerAggregation.size() - 3)));
 
         PowerProductionAggregationRepository powerProductionRepositories = Mockito.mock(PowerProductionAggregationRepository.class);
-        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(LocalDateTime.class))).thenReturn(aggregationsWithMissingValues);
+        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(ZonedDateTime.class))).thenReturn(aggregationsWithMissingValues);
 
         aggregationMap.put(AggregationPeriodType.MINUTE, powerProductionRepositories);
         powerProductionAggregationService = new PowerProductionAggregationService(aggregationMap, missingPowerProductionAggregationFiller);
@@ -134,7 +134,7 @@ class PowerProductionAggregationServiceTest {
         allPowerAggregation.set(7, builtEmptyAggregation(dateTime.minusMinutes(7)));
 
         PowerProductionAggregationRepository powerProductionRepositories = Mockito.mock(PowerProductionAggregationRepository.class);
-        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(LocalDateTime.class))).thenReturn(aggregationsWithMissingValues);
+        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(ZonedDateTime.class))).thenReturn(aggregationsWithMissingValues);
 
         aggregationMap.put(AggregationPeriodType.MINUTE, powerProductionRepositories);
         powerProductionAggregationService = new PowerProductionAggregationService(aggregationMap, missingPowerProductionAggregationFiller);
@@ -167,7 +167,7 @@ class PowerProductionAggregationServiceTest {
         allPowerAggregation.set(allPowerAggregation.size() - 2, builtEmptyAggregation(dateTime.minusMinutes(allPowerAggregation.size() - 2)));
 
         PowerProductionAggregationRepository powerProductionRepositories = Mockito.mock(PowerProductionAggregationRepository.class);
-        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(LocalDateTime.class))).thenReturn(aggregationsWithMissingValues);
+        Mockito.when(powerProductionRepositories.findByOrderByTimestampAsc(any(ZonedDateTime.class))).thenReturn(aggregationsWithMissingValues);
 
         aggregationMap.put(AggregationPeriodType.MINUTE, powerProductionRepositories);
         powerProductionAggregationService = new PowerProductionAggregationService(aggregationMap, missingPowerProductionAggregationFiller);
@@ -182,14 +182,14 @@ class PowerProductionAggregationServiceTest {
     }
 
 
-    private static MinutesAggregation builtEmptyAggregation(LocalDateTime timestamp) {
+    private static MinutesAggregation builtEmptyAggregation(ZonedDateTime timestamp) {
         return MinutesAggregation.builder()
                 .aggregationValue(null)
                 .aggregatedPowerStations(null)
                 .timestamp(timestamp).build();
     }
 
-    private static List<PowerProductionAggregation> createListWitPowerProduction(LocalDateTime dateTime, Integer duration) {
+    private static List<PowerProductionAggregation> createListWitPowerProduction(ZonedDateTime dateTime, Integer duration) {
         List<PowerProductionAggregation> resultList = new LinkedList<>();
 
         for (int i = 0; i < duration; i++) {

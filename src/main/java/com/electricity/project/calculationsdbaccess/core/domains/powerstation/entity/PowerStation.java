@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public abstract class PowerStation {
     private PowerStationState state;
 
     @Column(nullable = false)
-    private LocalDateTime creationTime;
+    private ZonedDateTime creationTime;
 
     @Column(nullable = false)
     private double maxPower;

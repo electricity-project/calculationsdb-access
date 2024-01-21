@@ -21,12 +21,12 @@ public class WeatherApiResource {
     private final WeatherApiKeyService weatherApiKeyService;
 
     @GetMapping
-    public ResponseEntity<WeatherApiKeyDTO> getActualWeatherApiKey(){
+    public ResponseEntity<WeatherApiKeyDTO> getActualWeatherApiKey() {
         return ResponseEntity.ok(WeatherApiKeyMapper.mapToDTO(weatherApiKeyService.getWeatherApiKey()));
     }
 
     @PostMapping
-    public ResponseEntity<Object> addNewWeatherApiKey(@RequestBody WeatherApiKeyDTO weatherApiKeyDTO){
+    public ResponseEntity<Object> addNewWeatherApiKey(@RequestBody WeatherApiKeyDTO weatherApiKeyDTO) {
         weatherApiKeyService.addNewWeatherApiKey(WeatherApiKeyMapper.mapToEntity(weatherApiKeyDTO));
         return ResponseEntity.noContent().build();
     }

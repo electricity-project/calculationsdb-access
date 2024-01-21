@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 @Getter
@@ -28,6 +28,6 @@ public abstract class PowerProductionAggregation {
     protected Long aggregatedPowerStations;
 
     @Column(nullable = false)
-    protected LocalDateTime timestamp;
+    protected ZonedDateTime timestamp;
 
 }

@@ -3,7 +3,7 @@ package com.electricity.project.calculationsdbaccess.core.domains.weather.entity
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Getter
@@ -21,5 +21,5 @@ public class WeatherApiKey {
     private String apiKey;
 
     @Column(nullable = false)
-    private LocalDateTime changeDate;
+    private ZonedDateTime changeDate;
 }

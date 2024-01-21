@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface WeatherApiKeyRepository  extends JpaRepository<WeatherApiKey, Integer> {
+public interface WeatherApiKeyRepository extends JpaRepository<WeatherApiKey, Integer> {
     Optional<WeatherApiKey> findTopByOrderByChangeDateDesc();
 }

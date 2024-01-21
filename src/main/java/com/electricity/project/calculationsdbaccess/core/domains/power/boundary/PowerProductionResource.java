@@ -8,10 +8,11 @@ import com.electricity.project.calculationsdbaccess.core.domains.power.control.P
 import com.electricity.project.calculationsdbaccess.core.domains.power.entity.PowerProduction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,7 +55,8 @@ public class PowerProductionResource {
     }
 
     @GetMapping("/date")
-    public ResponseEntity<List<PowerProductionDTO>> getPowerProductionForDate(@RequestParam LocalDateTime time) {
+    public ResponseEntity<List<PowerProductionDTO>> getPowerProductionForDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime time) {
+        log.info("Czas requestu: {}", time);
         return ResponseEntity.ok(powerProductionService.getPowerProductionForDate(time)
                 .stream()
                 .map(PowerProductionMapper::mapToDTO)

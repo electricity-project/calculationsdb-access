@@ -4,15 +4,15 @@ import com.electricity.project.calculationsdbaccess.api.aggregation.AggregationP
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FilterDateParser {
-    public static LocalDateTime createFilterDate(AggregationPeriodType periodType, Integer duration) {
+    public static ZonedDateTime createFilterDate(AggregationPeriodType periodType, Integer duration) {
         return switch (periodType) {
-            case MINUTE -> LocalDateTime.now().minusMinutes(duration);
-            case HOUR -> LocalDateTime.now().minusHours(duration);
-            case DAY -> LocalDateTime.now().minusDays(duration);
+            case MINUTE -> ZonedDateTime.now().minusMinutes(duration);
+            case HOUR -> ZonedDateTime.now().minusHours(duration);
+            case DAY -> ZonedDateTime.now().minusDays(duration);
         };
     }
 }
