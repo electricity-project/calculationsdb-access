@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.weather.boundary;
 
 import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
+import com.electricity.project.calculationsdbaccess.api.weather.ForecastHourWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.WeatherApiKeyDTO;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherApiKeyMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherApiKeyService;

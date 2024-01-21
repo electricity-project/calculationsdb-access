@@ -7,6 +7,7 @@ import com.electricity.project.calculationsdbaccess.core.domains.powerstation.co
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.IPowerStationCount;
 import com.electricity.project.calculationsdbaccess.core.domains.powerstation.entity.PowerStation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PowerStationService {
 
     private static final String ACTION_GET = "GET";
@@ -80,8 +82,8 @@ public class PowerStationService {
         return powerStationRepository.findPowerStationByIpv6Address(ipv6);
     }
 
-    public long deletePowerStationByIpv6(String ipv6) {
-        return powerStationRepository.deleteByIpv6Address(ipv6);
+    public void deletePowerStationByIpv6(String ipv6) {
+        powerStationRepository.deleteByIpv6Address(ipv6);
     }
 
     @Transactional

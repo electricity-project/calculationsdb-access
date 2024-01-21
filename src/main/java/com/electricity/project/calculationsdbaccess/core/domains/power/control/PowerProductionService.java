@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -33,10 +34,8 @@ public class PowerProductionService {
 
         List<PowerProduction> resultList = switch (periodType) {
             case MINUTE -> powerProductionRepository.getByIpv6OrderByTimestampDesc(ipv6, filterDate);
-            case HOUR ->
-                    mapToPowerProduction(powerProductionRepository.getByIpv6AndTimestampForHour(ipv6, filterDate), ipv6);
-            case DAY ->
-                    mapToPowerProduction(powerProductionRepository.getByIpv6AndTimestampForDay(ipv6, filterDate), ipv6);
+            case HOUR -> mapToPowerProduction(powerProductionRepository.getByIpv6AndTimestampForHour(ipv6, filterDate), ipv6);
+            case DAY -> mapToPowerProduction(powerProductionRepository.getByIpv6AndTimestampForDay(ipv6, filterDate), ipv6);
         };
 
         if (resultList.size() != duration) {
@@ -58,7 +57,7 @@ public class PowerProductionService {
         return aggregationProductions.stream()
                 .map(iPowerAggregationProduction -> PowerProduction.builder()
                         .ipv6(ipv6)
-                        .timestamp(iPowerAggregationProduction.getAggregatedTimestamp())
+                        .timestamp(iPowerAggregationProduction.getAggregatedTimestamp().atZone(ZoneId.of("UTC")))
                         .producedPower(iPowerAggregationProduction.getAggregatedValue())
                         .state(PowerStationState.WORKING)
                         .build()

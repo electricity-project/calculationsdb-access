@@ -1,10 +1,10 @@
 package com.electricity.project.calculationsdbaccess.core.domains.power.entity;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 public interface IPowerAggregationProduction {
 
     Long getAggregatedValue();
 
-    ZonedDateTime getAggregatedTimestamp();
+    Instant getAggregatedTimestamp();
 }

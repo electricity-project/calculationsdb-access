@@ -33,6 +33,4 @@ public interface PowerProductionDTO {
 
     @JsonProperty(value = "timestamp", required = true)
     ZonedDateTime getTimestamp();
-
-    //2024-01-21T12:08:01.000174426 01:00[Europe/Warsaw]
 }

@@ -42,7 +42,7 @@ public abstract class PowerStation {
     @Column(nullable = false)
     private boolean isConnected;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "power_station_ipv6", referencedColumnName = "ipv6Address", nullable = false, insertable = false, updatable = false)
     private Set<PowerProduction> powerProductions = new LinkedHashSet<>();
 
