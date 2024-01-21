@@ -4,6 +4,7 @@ import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.WeatherApiKeyDTO;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherApiKeyMapper;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherApiKeyService;
+import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherForecastService;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.exception.InvalidWeatherApiKey;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.exception.IsCurrentWeatherApiKey;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.exception.NoWeatherApiKeyFound;
@@ -12,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/weather-api")
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class WeatherApiResource {
 
     private final WeatherApiKeyService weatherApiKeyService;
+    private final WeatherForecastService weatherForecastService;
 
     @GetMapping
     public ResponseEntity<WeatherApiKeyDTO> getActualWeatherApiKey() {
@@ -26,9 +31,14 @@ public class WeatherApiResource {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addNewWeatherApiKey(@RequestBody WeatherApiKeyDTO weatherApiKeyDTO) {
+    public ResponseEntity<Void> addNewWeatherApiKey(@RequestBody WeatherApiKeyDTO weatherApiKeyDTO){
         weatherApiKeyService.addNewWeatherApiKey(WeatherApiKeyMapper.mapToEntity(weatherApiKeyDTO));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/forecast")
+    public ResponseEntity<List<ForecastHourWeatherDTO>> getForecastWeather(@RequestParam LocalDate date) {
+        return ResponseEntity.ok(weatherForecastService.getForecastFor(date));
     }
 
     @ExceptionHandler(NoWeatherApiKeyFound.class)
