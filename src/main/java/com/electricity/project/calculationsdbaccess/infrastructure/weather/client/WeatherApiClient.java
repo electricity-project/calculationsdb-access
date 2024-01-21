@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.infrastructure.weather.client;
 
 
+import com.electricity.project.calculationsdbaccess.api.weather.WeatherDTO;
 import com.electricity.project.calculationsdbaccess.infrastructure.weather.entity.Coordinates;
 import com.electricity.project.calculationsdbaccess.infrastructure.weather.entity.WeatherApiResponseWrapper;
 import com.electricity.project.calculationsdbaccess.infrastructure.weather.entity.WeatherResponseAbstract;
@@ -14,6 +15,7 @@ import reactor.netty.http.client.HttpClient;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -22,6 +24,9 @@ public class WeatherApiClient implements WeatherClient {
 
     @Value("${api.weather.realtime.weather.uri}")
     private String realtimeWeatherUri;
+
+    @Value("${api.weather.forecast.weather.uri}")
+    private String forecastWeatherUri;
     private final WebClient client;
 
     public WeatherApiClient(@Value("${api.weather.baseurl}") String baseUrl) {
@@ -48,5 +53,23 @@ public class WeatherApiClient implements WeatherClient {
                 .block();
 
         return Objects.requireNonNull(response).getCurrent();
+    }
+
+    @Override
+    public WeatherDTO getForecastWeather(@NonNull String apiKey, @NonNull Coordinates coordinates, @NonNull LocalDate date) {
+        return client.get()
+                .uri(forecastWeatherUri, uriBuilder -> uriBuilder
+                        .queryParam("key", apiKey)
+                        .queryParam("q", String.format(Locale.US, "%f,%f", coordinates.latitude(), coordinates.longitude()))
+                        .queryParam("aqi", "no")
+                        .queryParam("alerts", "no")
+                        .queryParam("dt", date.toString())
+                        .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .acceptCharset(StandardCharsets.UTF_8)
+                .retrieve()
+                .bodyToMono(WeatherDTO.class)
+                .retry(3)
+                .block();
     }
 }
