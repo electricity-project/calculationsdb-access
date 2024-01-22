@@ -48,6 +48,11 @@ public class PowerStationResource {
         return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.getPowerStationById(id)));
     }
 
+    @PatchMapping
+    public ResponseEntity<PowerStationDTO> updatePowerStationStateByIpv6(@RequestParam String ipv6, @RequestParam PowerStationState state){
+        return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.updatePowerStationState(ipv6, state)));
+    }
+
     @GetMapping
     public ResponseEntity<PowerStationDTO> getPowerStationByIpv6(String ipv6) {
         return ResponseEntity.ok(PowerStationMapper.mapToDTO(powerStationService.getPowerStationByIpv6(ipv6)));
@@ -65,9 +70,7 @@ public class PowerStationResource {
     }
 
     @PostMapping("/all_filter_list")
-    public ResponseEntity<List<PowerStationDTO>> getPowerStations(
-            @RequestBody PowerStationFilterDTO powerStationFilterDTO
-    ) {
+    public ResponseEntity<List<PowerStationDTO>> getPowerStations(@RequestBody PowerStationFilterDTO powerStationFilterDTO) {
         return ResponseEntity.ok(powerStationService.getPowerStations(powerStationFilterDTO).stream()
                 .map(PowerStationMapper::mapToDTO).toList());
     }

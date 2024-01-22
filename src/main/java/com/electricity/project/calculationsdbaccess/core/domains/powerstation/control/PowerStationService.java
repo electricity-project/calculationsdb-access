@@ -26,6 +26,7 @@ public class PowerStationService {
 
     private static final String ACTION_GET = "GET";
     private static final String ACTION_DISCONNECT = "DISCONNECT";
+    private static final String ACTION_UPDATE_STATE = "UPDATE STATE";
     private final PowerStationRepository powerStationRepository;
 
     @Transactional
@@ -109,5 +110,12 @@ public class PowerStationService {
 
     public List<PowerStation> getPowerStations(PowerStationFilterDTO powerStationFilterDTO) {
         return powerStationRepository.findAll(powerStationRepository.filterSpecification(powerStationFilterDTO));
+    }
+
+    public PowerStation updatePowerStationState(String ipv6, PowerStationState state) {
+        PowerStation powerStation = findPowerStationByIpv6(ipv6)
+                .orElseThrow(() -> new InvalidPowerStationIpv6Address(ACTION_UPDATE_STATE, ipv6));
+        powerStation.setState(state);
+        return powerStationRepository.save(powerStation);
     }
 }
