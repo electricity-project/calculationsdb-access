@@ -14,3 +14,5 @@ echo "Start uploading  calculations-db-access"
 docker save calculations-db-access:latest | ssh -C "$ssh_configuration" docker load
 
 ssh "$ssh_configuration" 'docker compose -f deploy/docker-compose-manual.yaml up -d calculations-db-access'
+
+ssh "$ssh_configuration" 'docker network connect bridge szoze-system-calculations-db-access-1'
