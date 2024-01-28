@@ -1,10 +1,12 @@
 package com.electricity.project.calculationsdbaccess.core.domains.weather.control;
 
+import com.electricity.project.calculationsdbaccess.api.weather.CurrentWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.ForecastDayWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.ForecastHourWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.WeatherDTO;
 import com.electricity.project.calculationsdbaccess.infrastructure.weather.client.WeatherClient;
 import com.electricity.project.calculationsdbaccess.infrastructure.weather.entity.Coordinates;
+import com.electricity.project.calculationsdbaccess.infrastructure.weather.entity.WeatherResponseAbstract;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +27,11 @@ public class WeatherForecastService {
         WeatherDTO weatherDto = weatherClient.getForecastWeather(weatherApiKey, WROCLAW_COORDINATES, date);
         List<ForecastDayWeatherDTO> forecastDayWeather = weatherDto.getForecastWeather().getForecastDayWeather();
         return forecastDayWeather.isEmpty() ? emptyList() : forecastDayWeather.getFirst().getHoursWeather();
+    }
+
+    public CurrentWeatherDTO getCurrentWeather() {
+        String weatherApiKey = weatherApiKeyService.getWeatherApiKey().getApiKey();
+        WeatherResponseAbstract realTimeWeather = weatherClient.getRealTimeWeather(weatherApiKey, WROCLAW_COORDINATES);
+        return CurrentWeatherMapper.mapToDTO(realTimeWeather);
     }
 }

@@ -1,6 +1,7 @@
 package com.electricity.project.calculationsdbaccess.core.domains.weather.boundary;
 
 import com.electricity.project.calculationsdbaccess.api.error.ErrorDTO;
+import com.electricity.project.calculationsdbaccess.api.weather.CurrentWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.ForecastHourWeatherDTO;
 import com.electricity.project.calculationsdbaccess.api.weather.WeatherApiKeyDTO;
 import com.electricity.project.calculationsdbaccess.core.domains.weather.control.WeatherApiKeyMapper;
@@ -40,6 +41,11 @@ public class WeatherApiResource {
     @GetMapping("/forecast")
     public ResponseEntity<List<ForecastHourWeatherDTO>> getForecastWeather(@RequestParam LocalDate date) {
         return ResponseEntity.ok(weatherForecastService.getForecastFor(date));
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<CurrentWeatherDTO> getCurrentWeather() {
+        return ResponseEntity.ok(weatherForecastService.getCurrentWeather());
     }
 
     @ExceptionHandler(NoWeatherApiKeyFound.class)
